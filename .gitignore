@@ -16,3 +16,7 @@
 local.properties
 .env
 debug.keystore
+
+# Allow versioned APKs in build_apks
+!/build_apks/*.apk
+!/build_apks/

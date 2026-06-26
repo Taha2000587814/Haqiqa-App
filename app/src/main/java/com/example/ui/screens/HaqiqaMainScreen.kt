@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -291,7 +292,7 @@ fun HaqiqaMainScreen(
                             verticalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             Text(
-                                text = if (language == AppLanguage.ARABIC) "تم التطوير بواسطة طه عبد الكريم باستخدام AI Studio" else "Developed by Taha A. Kreem using AI Studio",
+                                text = if (language == AppLanguage.ARABIC) "تم التطوير بواسطة طه عبد الكريم" else "Developed by Taha A. Kreem",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = Slate600,
                                 fontWeight = FontWeight.Medium,
@@ -376,7 +377,7 @@ fun IntroCard(
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(
-                        text = "BETA v1.0.1",
+                        text = "BETA v1.0.2",
                         style = MaterialTheme.typography.labelSmall,
                         color = Emerald500,
                         fontWeight = FontWeight.Bold,
@@ -449,47 +450,135 @@ fun EngineAndLimitsPanel(
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                // AI Engine Selectors
+                // AI Engine Selectors - Dropdown Menu
+                var expanded by remember { mutableStateOf(false) }
                 val engines = listOf("Gemini", "Galaxy AI", "Fact GPT")
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentSize(Alignment.TopStart)
                 ) {
-                    engines.forEach { engine ->
-                        val isSelected = engine == selectedEngine
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .clip(RoundedCornerShape(24.dp))
-                                .background(if (isSelected) TechBlue else Slate700)
-                                .clickable { onEngineSelected(engine) }
-                                .padding(vertical = 10.dp)
-                                .testTag("engine_${engine.lowercase().replace(" ", "_")}_tab"),
-                            contentAlignment = Alignment.Center
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(Slate700)
+                            .border(1.dp, BorderColor, RoundedCornerShape(12.dp))
+                            .clickable { expanded = true }
+                            .padding(horizontal = 16.dp, vertical = 12.dp)
+                            .testTag("engine_selector_dropdown_anchor"),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
                         ) {
-                            Text(
-                                text = engine,
-                                style = MaterialTheme.typography.labelMedium,
-                                fontWeight = FontWeight.Bold,
-                                color = if (isSelected) Color.White else Slate300
+                            Icon(
+                                imageVector = when (selectedEngine) {
+                                    "Galaxy AI" -> Icons.Default.Info
+                                    "Fact GPT" -> Icons.Default.Search
+                                    else -> Icons.Default.Settings
+                                },
+                                contentDescription = "Engine Icon",
+                                tint = TechBlue,
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Column {
+                                Text(
+                                    text = selectedEngine,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.White
+                                )
+                                Text(
+                                    text = when (selectedEngine) {
+                                        "Galaxy AI" -> if (language == AppLanguage.ARABIC) "مستكشف التزييف العميق والصور" else "Deepfake & image scanner"
+                                        "Fact GPT" -> if (language == AppLanguage.ARABIC) "أرشيف الأخبار ومحرك الحقائق" else "News archives & fact engine"
+                                        else -> if (language == AppLanguage.ARABIC) "منطق متكامل وبحث عميق" else "Reasoning & deep search"
+                                    },
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = Slate300
+                                )
+                            }
+                        }
+                        Icon(
+                            imageVector = Icons.Default.ArrowDropDown,
+                            contentDescription = "Toggle Dropdown",
+                            tint = Slate300,
+                            modifier = Modifier
+                                .size(24.dp)
+                                .rotate(if (expanded) 180f else 0f)
+                        )
+                    }
+
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false },
+                        modifier = Modifier
+                            .fillMaxWidth(0.9f)
+                            .background(Slate800)
+                            .border(1.dp, BorderColor, RoundedCornerShape(12.dp))
+                            .testTag("engine_selector_dropdown_menu")
+                    ) {
+                        engines.forEach { engine ->
+                            val isSelected = engine == selectedEngine
+                            DropdownMenuItem(
+                                text = {
+                                    Column(modifier = Modifier.padding(vertical = 4.dp)) {
+                                        Text(
+                                            text = engine,
+                                            style = MaterialTheme.typography.bodyLarge,
+                                            fontWeight = FontWeight.Bold,
+                                            color = if (isSelected) TechBlue else Color.White
+                                        )
+                                        Text(
+                                            text = when (engine) {
+                                                "Galaxy AI" -> if (language == AppLanguage.ARABIC) "مسح عالي الدقة للصور والتزييف العميق" else "High-fidelity deepfake scans"
+                                                "Fact GPT" -> if (language == AppLanguage.ARABIC) "مسح عميق لأرشيفات الأخبار" else "Deep crawler of news archives"
+                                                else -> if (language == AppLanguage.ARABIC) "منطق معزز وبحث متقاطع" else "Rigorous reasoning & search crosscheck"
+                                            },
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = Slate300
+                                        )
+                                    }
+                                },
+                                onClick = {
+                                    onEngineSelected(engine)
+                                    expanded = false
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = when (engine) {
+                                            "Galaxy AI" -> Icons.Default.Info
+                                            "Fact GPT" -> Icons.Default.Search
+                                            else -> Icons.Default.Settings
+                                        },
+                                        contentDescription = null,
+                                        tint = if (isSelected) TechBlue else Slate300,
+                                        modifier = Modifier.size(20.dp)
+                                    )
+                                },
+                                trailingIcon = {
+                                    if (isSelected) {
+                                        Icon(
+                                            imageVector = Icons.Default.Check,
+                                            contentDescription = "Selected",
+                                            tint = TechBlue,
+                                            modifier = Modifier.size(18.dp)
+                                        )
+                                    }
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .testTag("engine_${engine.lowercase().replace(" ", "_")}_item")
                             )
                         }
                     }
                 }
 
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Short Engine Motto
-                Text(
-                    text = when (selectedEngine) {
-                        "Galaxy AI" -> if (language == AppLanguage.ARABIC) "فحص عالي الدقة للصور والتزييف العميق" else "High-fidelity fabrication and deepfake scan"
-                        "Fact GPT" -> if (language == AppLanguage.ARABIC) "مسح عميق للأرشيفات وتصريحات الصحف" else "Deep crawler of news archives & archives"
-                        else -> if (language == AppLanguage.ARABIC) "تحقق منطقي متكامل وقواعد المعرفة" else "Rigorous reasoning & deep search crosscheck"
-                    },
-                    style = MaterialTheme.typography.bodySmall,
-                    color = TechBlue,
-                    fontWeight = FontWeight.Medium
-                )
+                Spacer(modifier = Modifier.height(12.dp))
             }
         }
 
