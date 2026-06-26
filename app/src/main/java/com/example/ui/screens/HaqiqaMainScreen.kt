@@ -280,6 +280,40 @@ fun HaqiqaMainScreen(
                             }
                         }
                     }
+
+                    // 7.5 Developer Info Card
+                    item {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 16.dp, bottom = 32.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Text(
+                                text = if (language == AppLanguage.ARABIC) "تم التطوير بواسطة طه عبد الكريم باستخدام AI Studio" else "Developed by Taha A. Kreem using AI Studio",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = Slate600,
+                                fontWeight = FontWeight.Medium,
+                                textAlign = TextAlign.Center
+                            )
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                Text(
+                                    text = if (language == AppLanguage.ARABIC) "صنع في السودان" else "Made in Sudan",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = Slate600,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Text(
+                                    text = "🇸🇩",
+                                    style = MaterialTheme.typography.labelSmall
+                                )
+                            }
+                        }
+                    }
                 }
 
                 // 8. Dynamic Overlay: Interactive Chrome Extension Simulator
@@ -342,7 +376,7 @@ fun IntroCard(
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(
-                        text = "BETA v1.4",
+                        text = "BETA v1.0.1",
                         style = MaterialTheme.typography.labelSmall,
                         color = Emerald500,
                         fontWeight = FontWeight.Bold,
