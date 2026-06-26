@@ -4,6 +4,13 @@ Haqiqa is a professional-grade fact-checking and media verification application 
 
 ---
 
+## 📲 Download Pre-compiled APK
+You can download the fully packaged, production-ready Android application directly from this repository:
+- 📥 **[Download Latest APK (haqiqa.apk)](./haqiqa.apk)** (Located at the root of the repository)
+- 📂 **[Browse Versioned Releases](./build_apks)** (Browse previous and versioned releases)
+
+---
+
 ## 🎨 Design Theme: Professional Polish
 
 The application implements the **Professional Polish** design language, centered on an elegant, modern, and trustworthy aesthetic. Rather than using harsh, generic dark themes, it employs a sophisticated palette with careful attention to Material Design 3 guidelines:

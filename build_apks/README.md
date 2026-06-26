@@ -4,7 +4,16 @@ This directory is dedicated to saving compiled APK releases of the Haqiqa applic
 
 ## Versioned Releases
 
-### v1.0.2 (Current Release)
+### v1.0.3 (Current Release)
+- **Release Date**: June 26, 2026
+- **Features**:
+  - Replaced the horizontal AI Engine selector tabs with an interactive dropdown selection component.
+  - Included descriptive engine mottos inside the dropdown menu items with custom search/settings icons.
+  - Bumped application versionCode to `4` and version display to `1.0.3`.
+- **Artifacts**:
+  - `haqiqa-v1.0.3.apk` (Fully compiled debug APK)
+
+### v1.0.2
 - **Release Date**: June 26, 2026
 - **Features**:
   - Cleaned developer footer to "Developed by Taha A. Kreem" and "تم التطوير بواسطة طه عبد الكريم" with Sudanese flag support (removed "using AI Studio").
