@@ -1,0 +1,6 @@
+{
+  "name": "Haqiqa",
+  "description": "Truth, in real time. Instantly verify social media content, links, images, and audio using advanced AI engines and web search.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
