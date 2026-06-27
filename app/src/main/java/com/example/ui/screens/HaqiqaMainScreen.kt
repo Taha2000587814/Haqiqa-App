@@ -377,7 +377,7 @@ fun IntroCard(
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(
-                        text = "BETA v1.0.4",
+                        text = "BETA v1.0.3",
                         style = MaterialTheme.typography.labelSmall,
                         color = Emerald500,
                         fontWeight = FontWeight.Bold,
@@ -1397,19 +1397,70 @@ fun TruthSnapshotCard(
                             )
 
                             if (claim.sources.isNotEmpty()) {
-                                Spacer(modifier = Modifier.height(8.dp))
+                                Spacer(modifier = Modifier.height(10.dp))
                                 Text(
                                     text = t("sources_cited") + ":",
                                     style = MaterialTheme.typography.labelSmall,
                                     color = GoldAccent,
                                     fontWeight = FontWeight.Bold
                                 )
+                                Spacer(modifier = Modifier.height(4.dp))
+                                val uriHandler = androidx.compose.ui.platform.LocalUriHandler.current
                                 claim.sources.forEach { src ->
-                                    Text(
-                                        text = "• $src",
-                                        style = MaterialTheme.typography.labelSmall,
-                                        color = Slate300
-                                    )
+                                    val isUrl = src.startsWith("http://") || src.startsWith("https://")
+                                    val displayUrl = if (isUrl) src else {
+                                        try {
+                                            "https://www.google.com/search?q=" + java.net.URLEncoder.encode(src, "UTF-8")
+                                        } catch (e: Exception) {
+                                            "https://www.google.com/search?q=$src"
+                                        }
+                                    }
+                                    
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(vertical = 4.dp)
+                                            .clip(RoundedCornerShape(8.dp))
+                                            .background(Slate800)
+                                            .clickable {
+                                                try {
+                                                    uriHandler.openUri(displayUrl)
+                                                } catch (e: Exception) {
+                                                    // Fallback
+                                                }
+                                            }
+                                            .border(1.dp, BorderColor.copy(alpha = 0.4f), RoundedCornerShape(8.dp))
+                                            .padding(horizontal = 10.dp, vertical = 8.dp),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Row(
+                                            modifier = Modifier.weight(1f),
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Default.Info,
+                                                contentDescription = "Source",
+                                                tint = GoldAccent,
+                                                modifier = Modifier.size(14.dp)
+                                            )
+                                            Text(
+                                                text = src,
+                                                style = MaterialTheme.typography.labelSmall,
+                                                color = TechBlue,
+                                                fontWeight = FontWeight.Bold,
+                                                maxLines = 1,
+                                                overflow = TextOverflow.Ellipsis
+                                            )
+                                        }
+                                        Icon(
+                                            imageVector = Icons.Default.ArrowForward,
+                                            contentDescription = "Redirection to browser",
+                                            tint = Slate300,
+                                            modifier = Modifier.size(12.dp)
+                                        )
+                                    }
                                 }
                             }
                         }
