@@ -4,7 +4,14 @@ This directory is dedicated to saving compiled APK releases of the Haqiqa applic
 
 ## Versioned Releases
 
-### v1.0.3 (Current Release)
+### v1.0.4 (Current Release)
+- **Release Date**: June 27, 2026
+- **Features**:
+  - Automated version bump, compilation, and asset release via GitHub Actions.
+- **Artifacts**:
+  - `haqiqa-v1.0.4.apk` (Fully compiled debug APK)
+
+### v1.0.3
 - **Release Date**: June 26, 2026
 - **Features**:
   - Replaced the horizontal AI Engine selector tabs with an interactive dropdown selection component.
