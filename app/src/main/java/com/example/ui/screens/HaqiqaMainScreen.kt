@@ -4,9 +4,11 @@ import android.content.Intent
 import android.widget.Toast
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.ui.graphics.Path
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -46,6 +48,14 @@ import com.example.ui.viewmodel.HaqiqaViewModel
 import org.json.JSONArray
 import java.text.SimpleDateFormat
 import java.util.*
+
+private val Slate900: Color @Composable get() = MaterialTheme.colorScheme.background
+private val Slate800: Color @Composable get() = MaterialTheme.colorScheme.surface
+private val Slate700: Color @Composable get() = MaterialTheme.colorScheme.surfaceVariant
+private val Slate600: Color @Composable get() = MaterialTheme.colorScheme.onSurfaceVariant
+private val Slate300: Color @Composable get() = MaterialTheme.colorScheme.secondary
+private val Slate100: Color @Composable get() = MaterialTheme.colorScheme.onSurface
+private val BorderColor: Color @Composable get() = MaterialTheme.colorScheme.outline
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -114,6 +124,19 @@ fun HaqiqaMainScreen(
                         }
                     },
                     actions = {
+                        // Dark Mode Toggle
+                        val isDarkTheme by viewModel.isDarkMode.collectAsStateWithLifecycle()
+                        IconButton(
+                            onClick = { viewModel.toggleDarkMode() },
+                            modifier = Modifier.testTag("dark_mode_toggle_btn")
+                        ) {
+                            if (isDarkTheme) {
+                                SunIcon(tint = GoldAccent)
+                            } else {
+                                MoonIcon(tint = TechBlue)
+                            }
+                        }
+
                         // Extension simulator Toggle
                         IconButton(
                             onClick = { viewModel.toggleExtensionMode() },
@@ -313,6 +336,14 @@ fun HaqiqaMainScreen(
                                     style = MaterialTheme.typography.labelSmall
                                 )
                             }
+                            Spacer(modifier = Modifier.height(2.dp))
+                            Text(
+                                text = "${t("version_label")} ${com.example.BuildConfig.VERSION_NAME}",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Slate600,
+                                fontWeight = FontWeight.Normal,
+                                textAlign = TextAlign.Center
+                            )
                         }
                     }
                 }
@@ -377,7 +408,7 @@ fun IntroCard(
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(
-                        text = "BETA v1.0.4",
+                        text = "BETA v1.1.0",
                         style = MaterialTheme.typography.labelSmall,
                         color = Emerald500,
                         fontWeight = FontWeight.Bold,
@@ -490,7 +521,7 @@ fun EngineAndLimitsPanel(
                                     text = selectedEngine,
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.Bold,
-                                    color = Color.White
+                                    color = Slate100
                                 )
                                 Text(
                                     text = when (selectedEngine) {
@@ -531,7 +562,7 @@ fun EngineAndLimitsPanel(
                                             text = engine,
                                             style = MaterialTheme.typography.bodyLarge,
                                             fontWeight = FontWeight.Bold,
-                                            color = if (isSelected) TechBlue else Color.White
+                                            color = if (isSelected) TechBlue else Slate100
                                         )
                                         Text(
                                             text = when (engine) {
@@ -1222,20 +1253,102 @@ fun TruthSnapshotCard(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Verdict Badge
-            Surface(
-                color = verdictColor.copy(alpha = 0.15f),
-                shape = RoundedCornerShape(8.dp),
-                modifier = Modifier.fillMaxWidth()
+            // Verdict and Credibility Score Row
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = verdictLabel,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = verdictColor,
-                    fontWeight = FontWeight.Black,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(vertical = 12.dp)
-                )
+                // Verdict Badge
+                Surface(
+                    color = verdictColor.copy(alpha = 0.15f),
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(68.dp)
+                ) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        Text(
+                            text = verdictLabel,
+                            style = MaterialTheme.typography.titleMedium,
+                            color = verdictColor,
+                            fontWeight = FontWeight.Black,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(horizontal = 8.dp)
+                        )
+                    }
+                }
+
+                // Credibility Score Visual Indicator
+                Surface(
+                    color = Slate700.copy(alpha = 0.4f),
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier
+                        .width(150.dp)
+                        .height(68.dp)
+                        .border(1.dp, BorderColor.copy(alpha = 0.5f), RoundedCornerShape(12.dp))
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier.size(42.dp)
+                        ) {
+                            CircularProgressIndicator(
+                                progress = result.confidence / 100f,
+                                modifier = Modifier.fillMaxSize(),
+                                color = when {
+                                    result.confidence >= 75 -> Emerald500
+                                    result.confidence >= 40 -> Amber500
+                                    else -> Red500
+                                },
+                                strokeWidth = 4.dp,
+                                trackColor = BorderColor.copy(alpha = 0.3f)
+                            )
+                            Text(
+                                text = "${result.confidence}%",
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Black,
+                                color = Slate100
+                            )
+                        }
+
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = t("credibility_score"),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Slate300,
+                                fontWeight = FontWeight.Bold,
+                                maxLines = 1
+                            )
+                            Text(
+                                text = when {
+                                    result.confidence >= 75 -> if (language == AppLanguage.ARABIC) "عالٍ" else "High"
+                                    result.confidence >= 40 -> if (language == AppLanguage.ARABIC) "متوسط" else "Medium"
+                                    else -> if (language == AppLanguage.ARABIC) "منخفض" else "Low"
+                                },
+                                style = MaterialTheme.typography.bodySmall,
+                                color = when {
+                                    result.confidence >= 75 -> Emerald500
+                                    result.confidence >= 40 -> Amber500
+                                    else -> Red500
+                                },
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -1407,8 +1520,9 @@ fun TruthSnapshotCard(
                                 Spacer(modifier = Modifier.height(4.dp))
                                 val uriHandler = androidx.compose.ui.platform.LocalUriHandler.current
                                 claim.sources.forEach { src ->
-                                    val isUrl = src.startsWith("http://") || src.startsWith("https://")
-                                    val displayUrl = if (isUrl) src else {
+                                    val urlRegex = "(https?://[\\w-]+(\\.[\\w-]+)+(/\\S*)?)".toRegex()
+                                    val extractedUrl = urlRegex.find(src)?.value
+                                    val displayUrl = extractedUrl ?: if (src.startsWith("http://") || src.startsWith("https://")) src else {
                                         try {
                                             "https://www.google.com/search?q=" + java.net.URLEncoder.encode(src, "UTF-8")
                                         } catch (e: Exception) {
@@ -1622,6 +1736,38 @@ fun HistoryItemCard(
                             )
                         }
 
+                        // Credibility Score Badge in History List
+                        Box(
+                            modifier = Modifier
+                                .background(Slate700.copy(alpha = 0.6f), RoundedCornerShape(4.dp))
+                                .border(0.5.dp, BorderColor, RoundedCornerShape(4.dp))
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(6.dp)
+                                        .background(
+                                            color = when {
+                                                item.confidence >= 75 -> Emerald500
+                                                item.confidence >= 40 -> Amber500
+                                                else -> Red500
+                                            },
+                                            shape = CircleShape
+                                        )
+                                )
+                                Text(
+                                    text = "${item.confidence}%",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = Slate100,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+
                         Text(
                             text = "Engine: ${item.selectedEngine}",
                             style = MaterialTheme.typography.labelSmall,
@@ -1733,5 +1879,69 @@ fun ChromeExtensionSimulator(
                 Text(text = t("verify_btn"), fontWeight = FontWeight.Bold, color = Color.White)
             }
         }
+    }
+}
+
+@Composable
+fun SunIcon(modifier: Modifier = Modifier, tint: Color) {
+    Canvas(modifier = modifier.size(24.dp)) {
+        val center = this.center
+        val radius = size.minDimension / 4
+        // Draw center circle
+        drawCircle(color = tint, radius = radius, center = center)
+        // Draw rays
+        val rayLength = size.minDimension / 6
+        val rayWidth = 2.dp.toPx()
+        for (i in 0 until 8) {
+            val angle = i * Math.PI / 4
+            val startX = (center.x + (radius + 3.dp.toPx()) * Math.cos(angle)).toFloat()
+            val startY = (center.y + (radius + 3.dp.toPx()) * Math.sin(angle)).toFloat()
+            val endX = (center.x + (radius + 3.dp.toPx() + rayLength) * Math.cos(angle)).toFloat()
+            val endY = (center.y + (radius + 3.dp.toPx() + rayLength) * Math.sin(angle)).toFloat()
+            drawLine(
+                color = tint,
+                start = androidx.compose.ui.geometry.Offset(startX, startY),
+                end = androidx.compose.ui.geometry.Offset(endX, endY),
+                strokeWidth = rayWidth
+            )
+        }
+    }
+}
+
+@Composable
+fun MoonIcon(modifier: Modifier = Modifier, tint: Color) {
+    Canvas(modifier = modifier.size(24.dp)) {
+        val width = size.width
+        val height = size.height
+        val path = Path().apply {
+            moveTo(width * 0.7f, height * 0.1f)
+            cubicTo(
+                width * 0.3f, height * 0.1f,
+                width * 0.1f, height * 0.3f,
+                width * 0.1f, height * 0.6f
+            )
+            cubicTo(
+                width * 0.1f, height * 0.85f,
+                width * 0.35f, height * 1.0f,
+                width * 0.65f, height * 1.0f
+            )
+            cubicTo(
+                width * 0.8f, height * 1.0f,
+                width * 0.9f, height * 0.9f,
+                width * 0.95f, height * 0.85f
+            )
+            cubicTo(
+                width * 0.7f, height * 0.8f,
+                width * 0.55f, height * 0.65f,
+                width * 0.55f, height * 0.45f
+            )
+            cubicTo(
+                width * 0.55f, height * 0.25f,
+                width * 0.65f, height * 0.15f,
+                width * 0.7f, height * 0.1f
+            )
+            close()
+        }
+        drawPath(path = path, color = tint)
     }
 }

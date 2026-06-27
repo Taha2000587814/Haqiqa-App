@@ -56,6 +56,9 @@ class HaqiqaViewModel(private val repository: FactCheckRepository) : ViewModel()
     private val _isExtensionActive = MutableStateFlow(false)
     val isExtensionActive: StateFlow<Boolean> = _isExtensionActive.asStateFlow()
 
+    private val _isDarkMode = MutableStateFlow(false) // Start in light mode
+    val isDarkMode: StateFlow<Boolean> = _isDarkMode.asStateFlow()
+
     // History Flow from Database
     val history: StateFlow<List<FactCheckResult>> = repository.allHistory
         .stateIn(
@@ -94,6 +97,10 @@ class HaqiqaViewModel(private val repository: FactCheckRepository) : ViewModel()
 
     fun toggleExtensionMode() {
         _isExtensionActive.value = !_isExtensionActive.value
+    }
+
+    fun toggleDarkMode() {
+        _isDarkMode.value = !_isDarkMode.value
     }
 
     fun setLastResult(result: FactCheckResult?) {

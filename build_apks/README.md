@@ -4,12 +4,16 @@ This directory is dedicated to saving compiled APK releases of the Haqiqa applic
 
 ## Versioned Releases
 
-### v1.0.4 (Current Release)
+### v1.1.0 (Current Release)
 - **Release Date**: June 27, 2026
 - **Features**:
-  - Automated version bump, compilation, and asset release via GitHub Actions.
+  - Implemented full interactive Dark Mode with automated theme compliance across all cards, dropdowns, and text fields.
+  - Replaced the dark mode toggle with a custom-designed Sun and Moon theme switcher.
+  - Enhanced AI model verification prompts to fully support Arabic, English, and bilingual claims with Middle Eastern and global cross-referencing.
+  - Upgraded source citation UI to automatically extract and navigate to valid reference URLs with customized cards.
+  - Bumped application versionCode to `5` and version display to `1.1.0`.
 - **Artifacts**:
-  - `haqiqa-v1.0.4.apk` (Fully compiled debug APK)
+  - `haqiqa-v1.1.0.apk` (Fully compiled debug APK)
 
 ### v1.0.3
 - **Release Date**: June 26, 2026

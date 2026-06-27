@@ -26,6 +26,7 @@ object AppTranslations {
         "verdict_false" to "FALSE CLAIM",
         "verdict_unverifiable" to "UNVERIFIABLE",
         "confidence" to "Confidence Score",
+        "credibility_score" to "Credibility Score",
         "is_deepfake" to "Deepfake Warning",
         "deepfake_yes" to "Fabrication Detected",
         "deepfake_no" to "Authentic Media Scan",
@@ -52,7 +53,8 @@ object AppTranslations {
         "rate_limit_error" to "Usage limit exceeded! Try again after the hourly cooldown or click the Demo Reset button below.",
         "api_fallback_note" to "Note: Active in high-fidelity offline simulation mode.",
         "community_insight" to "Community Insight",
-        "about_text" to "Haqiqa verifies online claims instantly. It scans social posts, checks databases, and detects deepfakes to stop the spread of fake news."
+        "about_text" to "Haqiqa verifies online claims instantly. It scans social posts, checks databases, and detects deepfakes to stop the spread of fake news.",
+        "version_label" to "Version"
     )
 
     private val ar = mapOf(
@@ -75,6 +77,7 @@ object AppTranslations {
         "verdict_false" to "ادعاء زائف",
         "verdict_unverifiable" to "غير قابل للتحقق",
         "confidence" to "مستوى الثقة",
+        "credibility_score" to "معدل الموثوقية",
         "is_deepfake" to "تحذير التزييف العميق",
         "deepfake_yes" to "تم كشف تزييف في الوسائط",
         "deepfake_no" to "فحص الوسائط: أصلي",
@@ -101,7 +104,8 @@ object AppTranslations {
         "rate_limit_error" to "لقد تجاوزت حد الاستخدام! يرجى الانتظار لحين انتهاء فترة التبريد أو انقر على زر إعادة تعيين التجريبي أدناه.",
         "api_fallback_note" to "ملاحظة: نشط في وضع المحاكاة عالي الدقة دون اتصال.",
         "community_insight" to "رأي المجتمع الموثوق",
-        "about_text" to "يقوم تطبيق الحقيقة بالتحقق الفوري من الادعاءات والشائعات المنتشرة عبر وسائل التواصل الاجتماعي من خلال فحص النصوص والصور والمقاطع الصوتية وكشف التزييف العميق."
+        "about_text" to "يقوم تطبيق الحقيقة بالتحقق الفوري من الادعاءات والشائعات المنتشرة عبر وسائل التواصل الاجتماعي من خلال فحص النصوص والصور والمقاطع الصوتية وكشف التزييف العميق.",
+        "version_label" to "الإصدار"
     )
 
     fun translate(key: String, lang: AppLanguage): String {

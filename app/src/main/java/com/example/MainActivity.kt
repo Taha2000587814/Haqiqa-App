@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.data.database.AppDatabase
 import com.example.data.repository.FactCheckRepository
@@ -22,16 +24,18 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            HaqiqaTheme {
-                // Initialize Room Database & Repository directly in Composable or grab from applicationContext
-                val context = this.applicationContext
-                val database = AppDatabase.getDatabase(context)
-                val repository = FactCheckRepository(database.factCheckDao(), context)
-                
-                // Get ViewModel using our custom Factory
-                val factory = HaqiqaViewModelFactory(repository)
-                val viewModel: HaqiqaViewModel = viewModel(factory = factory)
+            // Initialize Room Database & Repository directly in Composable or grab from applicationContext
+            val context = this.applicationContext
+            val database = AppDatabase.getDatabase(context)
+            val repository = FactCheckRepository(database.factCheckDao(), context)
+            
+            // Get ViewModel using our custom Factory
+            val factory = HaqiqaViewModelFactory(repository)
+            val viewModel: HaqiqaViewModel = viewModel(factory = factory)
 
+            val isDarkTheme by viewModel.isDarkMode.collectAsStateWithLifecycle()
+
+            HaqiqaTheme(darkTheme = isDarkTheme) {
                 Scaffold(
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
