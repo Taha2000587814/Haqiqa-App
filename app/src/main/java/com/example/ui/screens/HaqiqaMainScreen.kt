@@ -408,7 +408,7 @@ fun IntroCard(
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(
-                        text = "BETA v1.1.0",
+                        text = "BETA v1.1.1",
                         style = MaterialTheme.typography.labelSmall,
                         color = Emerald500,
                         fontWeight = FontWeight.Bold,

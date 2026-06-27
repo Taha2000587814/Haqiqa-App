@@ -4,7 +4,14 @@ This directory is dedicated to saving compiled APK releases of the Haqiqa applic
 
 ## Versioned Releases
 
-### v1.1.0 (Current Release)
+### v1.1.1 (Current Release)
+- **Release Date**: June 27, 2026
+- **Features**:
+  - Automated version bump, compilation, and asset release via GitHub Actions.
+- **Artifacts**:
+  - `haqiqa-v1.1.1.apk` (Fully compiled debug APK)
+
+### v1.1.0
 - **Release Date**: June 27, 2026
 - **Features**:
   - Implemented full interactive Dark Mode with automated theme compliance across all cards, dropdowns, and text fields.
