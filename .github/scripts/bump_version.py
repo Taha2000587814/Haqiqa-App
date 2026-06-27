@@ -52,12 +52,12 @@ def bump_version():
     # Replace in build.gradle.kts
     updated_gradle = re.sub(
         r'(versionCode\s*=\s*)\d+', 
-        f'\\1{new_code}', 
+        rf'\g<1>{new_code}', 
         gradle_content
     )
     updated_gradle = re.sub(
         r'(versionName\s*=\s*)"[^"]+"', 
-        f'\\1"{new_name}"', 
+        rf'\g<1>"{new_name}"', 
         updated_gradle
     )
 
